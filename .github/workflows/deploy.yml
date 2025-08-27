@@ -2,7 +2,7 @@ name: Deploy React to GitHub Pages
 
 on:
   push:
-    branches: [ main ]   # master를 쓰면 master로 바꿔줘
+    branches: [ main ]   # 기본 브랜치에 맞게 수정
   workflow_dispatch:
 
 permissions:
@@ -28,22 +28,52 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
       - name: Build
-        # CRA 빌드 경고로 실패하는 것 방지용 CI=false
-        run: npm run build
         env:
-          CI: false
+          CI: false   # CRA 경고로 실패 방지
+        run: npm run build
 
-      # SPA 라우팅(React Router 등)에서 새로고침 404 방지
-      # - name: Add 404 fallback for SPA
-      #   run: cp build/index.html build/404.html
+      - name: Show top-level folders (debug)
+        run: ls -la
 
+      # build / dist / out / public 안에서 index.html 있는 경로 자동 탐지
+      - name: Detect static output directory
+        id: detect
+        run: |
+          set -e
+          PUBLISH_DIR=""
+          for d in build dist out public; do
+            if [ -f "$d/index.html" ]; then
+              PUBLISH_DIR="$d"
+              break
+            fi
+          done
+
+          if [ -z "$PUBLISH_DIR" ]; then
+            echo "❌ No index.html found in build/dist/out/public."
+            echo "Folders (depth 2) for debugging:"
+            find . -maxdepth 2 -type d -print
+            exit 1
+          fi
+
+          echo "publish_dir=$PUBLISH_DIR" >> "$GITHUB_OUTPUT"
+          echo "✅ Using $PUBLISH_DIR"
+
+      - name: Show detected dir (debug)
+        run: ls -la "${{ steps.detect.outputs.publish_dir }}"
+
+      # SPA 라우팅 404 방지
+      - name: Add 404 fallback for SPA
+        run: cp "${{ steps.detect.outputs.publish_dir }}/index.html" "${{ steps.detect.outputs.publish_dir }}/404.html"
+
+      # 👉 반드시 감지된 경로로 업로드!
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: build
+          path: ${{ steps.detect.outputs.publish_dir }}
 
   deploy:
     needs: build
