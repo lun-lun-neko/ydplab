@@ -37,8 +37,8 @@ jobs:
           CI: false
 
       # SPA 라우팅(React Router 등)에서 새로고침 404 방지
-      - name: Add 404 fallback for SPA
-        run: cp build/index.html build/404.html
+      # - name: Add 404 fallback for SPA
+      #   run: cp build/index.html build/404.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
