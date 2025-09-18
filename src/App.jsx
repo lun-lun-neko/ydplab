@@ -1,15 +1,18 @@
 import { Route, Routes } from "react-router";
 import "./index.css";
 import HomePage from "./pages/HomePage";
-import QuestionsPage from "./pages/QuestionsPage";
 import ResultPage from "./pages/ResultPage";
+import Layout from "./layout";
+import QuestionsPage from "./pages/QuestionsPage";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/questions" element={<QuestionsPage />} />
-      <Route path="/result" element={<ResultPage />} />
+      <Route element={<Layout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/questions" element={<QuestionsPage />} />
+        <Route path="/result" element={<ResultPage />} />
+      </Route>
     </Routes>
   );
 }
