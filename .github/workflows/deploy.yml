@@ -1,9 +1,9 @@
-name: Deploy React to GitHub Pages
+name: Deploy React to GitHub Pages (develop)
 
 on:
   push:
-    branches: [ main ]   # 기본 브랜치에 맞게 수정
-  workflow_dispatch:
+    branches: [ develop ]   # ✅ develop에 push될 때마다 배포
+  workflow_dispatch:        # 수동 실행도 허용
 
 permissions:
   contents: read
@@ -33,7 +33,10 @@ jobs:
 
       - name: Build
         env:
-          CI: false   # CRA 경고로 실패 방지
+          # CRA 경고로 실패 방지 (Vite면 있어도 무방)
+          CI: false
+          # 큰 번들 대비(선택)
+          NODE_OPTIONS: --max-old-space-size=4096
         run: npm run build
 
       - name: Show top-level folders (debug)
@@ -51,14 +54,12 @@ jobs:
               break
             fi
           done
-
           if [ -z "$PUBLISH_DIR" ]; then
             echo "❌ No index.html found in build/dist/out/public."
             echo "Folders (depth 2) for debugging:"
             find . -maxdepth 2 -type d -print
             exit 1
           fi
-
           echo "publish_dir=$PUBLISH_DIR" >> "$GITHUB_OUTPUT"
           echo "✅ Using $PUBLISH_DIR"
 
@@ -85,3 +86,92 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        
+# name: Deploy React to GitHub Pages
+
+# on:
+#   push:
+#     branches: [ main ]   # 기본 브랜치에 맞게 수정
+#   workflow_dispatch:
+
+# permissions:
+#   contents: read
+#   pages: write
+#   id-token: write
+
+# concurrency:
+#   group: "pages"
+#   cancel-in-progress: true
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+
+#       - name: Setup Node
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: 20
+#           cache: npm
+
+#       - name: Install dependencies
+#         run: |
+#           if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+#       - name: Build
+#         env:
+#           CI: false   # CRA 경고로 실패 방지
+#         run: npm run build
+
+#       - name: Show top-level folders (debug)
+#         run: ls -la
+
+#       # build / dist / out / public 안에서 index.html 있는 경로 자동 탐지
+#       - name: Detect static output directory
+#         id: detect
+#         run: |
+#           set -e
+#           PUBLISH_DIR=""
+#           for d in build dist out public; do
+#             if [ -f "$d/index.html" ]; then
+#               PUBLISH_DIR="$d"
+#               break
+#             fi
+#           done
+
+#           if [ -z "$PUBLISH_DIR" ]; then
+#             echo "❌ No index.html found in build/dist/out/public."
+#             echo "Folders (depth 2) for debugging:"
+#             find . -maxdepth 2 -type d -print
+#             exit 1
+#           fi
+
+#           echo "publish_dir=$PUBLISH_DIR" >> "$GITHUB_OUTPUT"
+#           echo "✅ Using $PUBLISH_DIR"
+
+#       - name: Show detected dir (debug)
+#         run: ls -la "${{ steps.detect.outputs.publish_dir }}"
+
+#       # SPA 라우팅 404 방지
+#       - name: Add 404 fallback for SPA
+#         run: cp "${{ steps.detect.outputs.publish_dir }}/index.html" "${{ steps.detect.outputs.publish_dir }}/404.html"
+
+#       # 👉 반드시 감지된 경로로 업로드!
+#       - name: Upload Pages artifact
+#         uses: actions/upload-pages-artifact@v3
+#         with:
+#           path: ${{ steps.detect.outputs.publish_dir }}
+
+#   deploy:
+#     needs: build
+#     runs-on: ubuntu-latest
+#     environment:
+#       name: github-pages
+#       url: ${{ steps.deployment.outputs.page_url }}
+#     steps:
+#       - name: Deploy to GitHub Pages
+#         id: deployment
+#         uses: actions/deploy-pages@v4
+
