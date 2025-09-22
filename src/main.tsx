@@ -7,7 +7,7 @@ const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root") as HTMLElement).render(
   <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
+    <BrowserRouter basename="/ydplab">
       <App />
     </BrowserRouter>
   </QueryClientProvider>
