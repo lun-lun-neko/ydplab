@@ -5,17 +5,27 @@ import "swiper/css";
 import { useGetQuestionsQuery } from "../../hooks/useGetQuestionsQuery";
 import Spinner from "../../components/Spinner";
 import QuestionCard from "../../components/QuestionCard";
-import { useRef } from "react";
+import { useState } from "react";
 
 const QuestionsPage = () => {
   const { data: questions, isLoading } = useGetQuestionsQuery();
-  const swiperRef = useRef(null);
 
-  const handleNext = () => {
-    if (swiperRef.current) {
-      swiperRef.current.slideNext(); // 다음 슬라이드로 이동
-    }
-  };
+  const [selected, setSelected] = useState({
+    householdIncome: 0,
+    leisurePurpose: 0,
+    leisurePurpose2: 0,
+    weekdayAvgLeisureTime: 0,
+    weekendAvgLeisureTime: 0,
+    restRecreationRate: 0,
+    hobbyRate: 0,
+    selfImprovementRate: 0,
+    socialRelationshipRate: 0,
+    leisureActivity1: 0,
+    leisureActivity2: 0,
+    leisureActivity3: 0,
+    leisureActivity4: 0,
+    leisureActivity5: 0,
+  });
 
   if (isLoading) {
     return <Spinner />;
@@ -23,13 +33,7 @@ const QuestionsPage = () => {
 
   return (
     <Container>
-      <Swiper
-        pagination={true}
-        modules={[Pagination]}
-        slidesPerView={1}
-        onSlideChange={() => console.log("slide change")}
-        onSwiper={(swiper) => (swiperRef.current = swiper)}
-      >
+      <Swiper slidesPerView={1}>
         {questions.map((question) => (
           <SwiperSlide>
             <QuestionCard question={question} />
