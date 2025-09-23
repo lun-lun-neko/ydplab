@@ -2,7 +2,7 @@ name: Deploy (develop → Pages)
 
 on:
   push:
-    branches: [ develop ]
+    branches: [develop]
   workflow_dispatch:
 
 permissions:
@@ -47,8 +47,6 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
-
-
 # name: Deploy React to GitHub Pages (develop)
 
 # on:
@@ -138,7 +136,7 @@ jobs:
 #       - name: Deploy to GitHub Pages
 #         id: deployment
 #         uses: actions/deploy-pages@v4
-        
+
 # name: Deploy React to GitHub Pages
 
 # on:
@@ -226,4 +224,3 @@ jobs:
 #       - name: Deploy to GitHub Pages
 #         id: deployment
 #         uses: actions/deploy-pages@v4
-
