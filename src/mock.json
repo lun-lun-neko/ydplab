@@ -48,33 +48,39 @@
       "subQuestions": [
         {
           "category": "weekdayAvgLeisureTime",
-          "title": "평일 하루 평균 여가 시간을 입력해주세요."
+          "title": "평일 하루 평균 여가 시간을 입력해주세요.",
+          "placeholder": "0 ~ 24"
         },
         {
           "category": "weekendAvgLeisureTime",
-          "title": "주말 하루 평균 여가 시간을 입력해주세요."
+          "title": "주말 하루 평균 여가 시간을 입력해주세요",
+          "placeholder": "0 ~ 24"
         }
       ]
     },
     {
       "category": "leisureRate",
-      "title": "여가시간 중 사용 비율을 적어주세요.",
+      "title": "여가시간 중 사용 비율을 적어주세요",
       "subQuestions": [
         {
           "category": "restRecreationRate",
-          "title": "휴식·오락"
+          "title": "휴식·오락",
+          "placeholder": "0 ~ 100 (합이 100이 되어야 합니다)"
         },
         {
           "category": "hobbyRate",
-          "title": "취미"
+          "title": "취미",
+          "placeholder": "0 ~ 100 (합이 100이 되어야 합니다)"
         },
         {
           "category": "selfImprovementRate",
-          "title": "본인계발"
+          "title": "본인계발",
+          "placeholder": "0 ~ 100 (합이 100이 되어야 합니다)"
         },
         {
           "category": "socialRelationshipRate",
-          "title": "대인관계·교제"
+          "title": "대인관계·교제",
+          "placeholder": "0 ~ 100 (합이 100이 되어야 합니다)"
         }
       ]
     },

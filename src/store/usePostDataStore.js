@@ -1,24 +1,27 @@
 import { create } from "zustand";
 
 const initialState = {
-  householdIncome: 1,
-  leisurePurpose: 0,
-  leisurePurpose2: 0,
-  weekdayAvgLeisureTime: 0,
-  weekendAvgLeisureTime: 0,
-  restRecreationRate: 0,
-  hobbyRate: 0,
-  selfImprovementRate: 0,
-  socialRelationshipRate: 0,
-  leisureActivity1: 0,
-  leisureActivity2: 0,
-  leisureActivity3: 0,
-  leisureActivity4: 0,
-  leisureActivity5: 0,
+  householdIncome: null,
+  leisurePurpose: null,
+  leisurePurpose2: null,
+  weekdayAvgLeisureTime: null,
+  weekendAvgLeisureTime: null,
+  restRecreationRate: null,
+  hobbyRate: null,
+  selfImprovementRate: null,
+  socialRelationshipRate: null,
+  leisureActivity1: null,
+  leisureActivity2: null,
+  leisureActivity3: null,
+  leisureActivity4: null,
+  leisureActivity5: null,
 };
 
 export const usePostDataStore = create((set) => ({
-  ...initialState,
-  setPostData: (key, value) => set((state) => ({ ...state, [key]: value })),
+  postData: initialState,
+  setPostData: (category, value) =>
+    set((state) => ({
+      postData: { ...state.postData, [category]: Number(value) },
+    })),
   resetPostData: () => set(() => ({ ...initialState })),
 }));

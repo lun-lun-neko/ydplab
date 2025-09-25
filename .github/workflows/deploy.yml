@@ -1,8 +1,8 @@
-name: Deploy (develop → Pages)
+name: Deploy (dev → Pages)
 
 on:
   push:
-    branches: [develop]
+    branches: [dev]
   workflow_dispatch:
 
 permissions:
@@ -38,7 +38,7 @@ jobs:
           path: dist
 
   deploy:
-    if: github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/dev'
     needs: build
     runs-on: ubuntu-latest
     environment:
