@@ -31,6 +31,7 @@ const QuestionPage = () => {
   const isDisabledNextBtn = () => {
     // 해당 카테고리의 값이 없거나
     // 주관식일 때 조건에 안맞거나 조건1) 0~24
+    console.log("zzz");
   };
 
   //
