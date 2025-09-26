@@ -6,6 +6,7 @@ import QuestionList from "../../components/QuestionList";
 import SubQuestionList from "../../components/SubQuestionList";
 import { usePostDataStore } from "../../store/usePostDataStore";
 import { useEffect } from "react";
+import { usePostQuestionsQuery } from "../../hooks/usePostQuestionsQuery";
 
 const QuestionPage = () => {
   const { postData } = usePostDataStore();
@@ -15,6 +16,7 @@ const QuestionPage = () => {
   const { questions } = mockData;
   const total = questions.length;
   const currentQuestion = questions[id - 1];
+  const { mutate: postQuestions } = usePostQuestionsQuery();
 
   const handleNextPage = () => {
     const nextId = Number(id) + 1;
@@ -27,14 +29,14 @@ const QuestionPage = () => {
   };
 
   const handleSubmit = () => {
-    navigate("/result");
+    postQuestions(postData);
   };
 
   useEffect(() => {
     console.log(postData);
   }, [postData]);
   return (
-    <Container className="flex flex-col min-h-[625px]">
+    <Container className="flex flex-col ">
       <ResponsePercent currentQuestionIndex={id} total={total} />
 
       {currentQuestion.subQuestions ? (

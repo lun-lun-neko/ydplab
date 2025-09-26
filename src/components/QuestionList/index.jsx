@@ -1,5 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePostDataStore } from "../../store/usePostDataStore";
+import Modal from "../Modal";
+import { MAPPING } from "../../constants/MAPPING";
 
 const QuestionList = ({
   currentQuestion,
@@ -11,6 +13,7 @@ const QuestionList = ({
   const { postData, setPostData } = usePostDataStore();
   const { questions } = currentQuestion;
   const keyOfQuestions = Object.keys(questions);
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const isCategoryLesuire = () => {
     if (currentQuestion.category.includes("leisureActivity")) {
@@ -37,16 +40,21 @@ const QuestionList = ({
       (value) => value !== null && value !== "" && value !== undefined
     );
   };
-  console.log(currentQuestion);
   return (
     <>
       <div>
+        <Modal isOpen={isOpenModal} onClose={() => setIsOpenModal(false)}>
+          {MAPPING}
+        </Modal>
         <div>
           <h2 className="text-[18px] py-3 font-bold">
             {currentQuestion.title}
           </h2>
           {isCategoryLesuire() && (
-            <button className="p-2 text-gray-400 cursor-pointer">
+            <button
+              onClick={() => setIsOpenModal(true)}
+              className="p-2 text-gray-400 cursor-pointer"
+            >
               보기 예시
             </button>
           )}
