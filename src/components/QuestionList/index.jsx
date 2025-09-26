@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { usePostDataStore } from "../../store/usePostDataStore";
 import Modal from "../Modal";
 import { MAPPING } from "../../constants/MAPPING";

@@ -29,6 +29,8 @@ jobs:
       - name: Build
         env:
           NODE_OPTIONS: --max-old-space-size=4096
+          VITE_KAKAO_JS_KEY: ${{ secrets.VITE_KAKAO_JS_KEY }}
+          VITE_KAKAO_TEMPLATE_ID: ${{secrets.VITE_KAKAO_TEMPLATE_ID}}
         run: npm run build
       - name: Add SPA 404
         run: cp dist/index.html dist/404.html
