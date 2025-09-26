@@ -15,14 +15,6 @@ const QuestionList = ({
   const keyOfQuestions = Object.keys(questions);
   const [isOpenModal, setIsOpenModal] = useState(false);
 
-  const isCategoryLesuire = () => {
-    if (currentQuestion.category.includes("leisureActivity")) {
-      console.log("dd");
-      return true;
-    }
-    return false;
-  };
-
   const isDisabledNextBtn = () => {
     const { category } = currentQuestion;
     const value = postData[category];
@@ -50,14 +42,6 @@ const QuestionList = ({
           <h2 className="text-[18px] py-3 font-bold">
             {currentQuestion.title}
           </h2>
-          {isCategoryLesuire() && (
-            <button
-              onClick={() => setIsOpenModal(true)}
-              className="p-2 text-gray-400 cursor-pointer"
-            >
-              보기 예시
-            </button>
-          )}
         </div>
         <ul className="flex flex-col gap-3">
           {keyOfQuestions.map((key) => (

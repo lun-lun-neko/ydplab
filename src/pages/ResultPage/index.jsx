@@ -3,6 +3,7 @@ import Container from "../../components/Container";
 import { usePostDataStore } from "../../store/usePostDataStore";
 import { useState } from "react";
 import Modal from "../../components/Modal";
+import { initKakao, shareByKakaoTalk } from "../../kakao";
 
 const ResultPage = () => {
   const location = useLocation();
@@ -22,6 +23,18 @@ const ResultPage = () => {
     setIsOpenModal(true);
   };
 
+  const handleClickShare = () => {
+    try {
+      initKakao();
+      shareByKakaoTalk({
+        name: result.animalName,
+        animalType: result.animalType,
+        description: result.description,
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   console.log(result);
   return (
     <Container className="flex flex-col items-center gap-4">
@@ -71,7 +84,10 @@ const ResultPage = () => {
         >
           다시 테스트하기
         </button>
-        <button className="flex-1 cursor-pointer mt-2 bg-blue-200 p-2">
+        <button
+          onClick={handleClickShare}
+          className="flex-1 cursor-pointer mt-2 bg-blue-200 p-2"
+        >
           공유하기
         </button>
       </div>
