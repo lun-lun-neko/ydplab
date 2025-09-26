@@ -21,7 +21,10 @@ export const usePostDataStore = create((set) => ({
   postData: initialState,
   setPostData: (category, value) =>
     set((state) => ({
-      postData: { ...state.postData, [category]: Number(value) },
+      postData: {
+        ...state.postData,
+        [category]: value === "" ? "" : Number(value),
+      },
     })),
   resetPostData: () => set(() => ({ ...initialState })),
 }));

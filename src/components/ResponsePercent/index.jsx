@@ -19,8 +19,9 @@ const ResponsePercent = ({ total, currentQuestionIndex }) => {
     postData.leisureActivity5,
   ];
 
-  const responseCount = answeredQuestions.filter((category) => category).length;
-
+  const responseCount = answeredQuestions.filter(
+    (value) => value !== null && value !== undefined && value !== ""
+  ).length;
   const percentNumber = (responseCount / total) * 100;
 
   return (
