@@ -18,8 +18,8 @@ const ResultPage = () => {
     navigate("/");
   };
 
-  const onClickDetail = (content) => {
-    setModalContent(content);
+  const onClickDetail = (data) => {
+    setModalContent(data);
     setIsOpenModal(true);
   };
 
@@ -30,6 +30,7 @@ const ResultPage = () => {
         name: result.animalName,
         animalType: result.animalType,
         description: result.description,
+        imageURL: result.imageURL,
       });
     } catch (error) {
       console.log(error.message);
@@ -39,7 +40,26 @@ const ResultPage = () => {
   return (
     <Container className="flex flex-col items-center gap-4">
       <Modal onClose={() => setIsOpenModal(false)} isOpen={isOpenModal}>
-        {modalContent}
+        {typeof modalContent === "string" && <p>{modalContent}</p>}
+        {typeof modalContent === "object" &&
+          !Array.isArray(modalContent) &&
+          modalContent !== null && (
+            <div>
+              <h3>{modalContent.subTitle}</h3>
+              <p>{modalContent.content}</p>
+              <h2 className="text-center text-[24px] p-4 font-bold">
+                {"< 주요 지표 >"}
+              </h2>
+              {modalContent.metrics?.map((obj) => (
+                <div className="">
+                  <h3 className="font-bold py-2 text-[20px] text-blue-400">
+                    {obj.subtitle}
+                  </h3>
+                  <p className="">{obj.content}</p>
+                </div>
+              ))}
+            </div>
+          )}
       </Modal>
       <div>
         <img src={result.animalImageUrl} alt="결과이미지" className="w-full" />
@@ -62,7 +82,7 @@ const ResultPage = () => {
       <h3 className="font-bold">{"< 분석 리포트 >"}</h3>
       {result.analSummary.map((summary) => (
         <button
-          onClick={() => onClickDetail(summary.content)}
+          onClick={() => onClickDetail(summary)}
           className="w-full bg-yellow-200 p-2 border-1 cursor-pointer font-bold rounded-md"
         >
           {summary.subtitle}

@@ -10,7 +10,7 @@ const HomePage = () => {
     <Container className="flex flex-col items-center gap-4 p-4">
       <img
         className="rounded-full w-40"
-        src="https://lunlunneko-ydplab.hf.space/static/animals/greyheron.svg"
+        src="https://lunlunneko-ydplab.hf.space/static/animals/greyheron.png"
         alt="꽹가리"
       />
       <h2 className="text-blue-400 font-bold text-[22px]">
