@@ -51,7 +51,7 @@ const ResultPage = () => {
         onClick={() => onClickDetail(result.animalDescription)}
         className="w-full bg-yellow-200 p-2 border-1 cursor-pointer font-bold rounded-md"
       >
-        {result.culsterInfo[1].animal}는 어떤 동물일까요 ?
+        {result.animal}는 어떤 동물일까요 ?
       </button>
       <button
         onClick={() => onClickDetail(result.typeDescriptoon)}
