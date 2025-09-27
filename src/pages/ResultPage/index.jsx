@@ -30,7 +30,7 @@ const ResultPage = () => {
         name: result.animalName,
         animalType: result.animalType,
         description: result.description,
-        imageURL: result.imageURL,
+        imageURL: result.animalImageUrl,
       });
     } catch (error) {
       console.log(error.message);
