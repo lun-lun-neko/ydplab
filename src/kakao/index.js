@@ -9,7 +9,7 @@ const initKakao = () => {
   Kakao.init(KAKAO_JS_KEY);
 };
 
-const shareByKakaoTalk = ({ name, animalType, description }) => {
+const shareByKakaoTalk = ({ name, animalType, description, imageURL }) => {
   const { Kakao } = window;
   Kakao.Share.sendCustom({
     templateId: Number(KAKAO_TEMPLATE_ID),
@@ -17,6 +17,7 @@ const shareByKakaoTalk = ({ name, animalType, description }) => {
       name,
       animalType,
       description,
+      imageURL,
     },
     installTalk: true,
   });
