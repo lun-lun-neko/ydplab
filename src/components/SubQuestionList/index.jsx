@@ -1,4 +1,5 @@
 import { usePostDataStore } from "../../store/usePostDataStore";
+import Total from "../Total";
 
 const SubQuestionList = ({
   currentQuestion,
@@ -7,6 +8,10 @@ const SubQuestionList = ({
 }) => {
   const { postData, setPostData } = usePostDataStore();
   const { subQuestions } = currentQuestion;
+
+  const isRequireTotal = () => {
+    return currentQuestion.category === "leisureRate" ? true : false;
+  };
 
   const isDisabledNextBtn = () => {
     if (currentQuestion.category === "avgLeisureTime") {
@@ -27,7 +32,10 @@ const SubQuestionList = ({
   return (
     <>
       <div>
-        <h2 className="text-[18px] py-3 font-bold">{currentQuestion.title}</h2>
+        <h2 className="text-[18px] py-3 font-bold">
+          <p>{currentQuestion.title}</p>
+          {isRequireTotal() && <Total />}
+        </h2>
         <ul className="flex flex-col gap-3">
           {subQuestions.map((question) => (
             <li key={question.category} className="flex flex-col gap-3">
