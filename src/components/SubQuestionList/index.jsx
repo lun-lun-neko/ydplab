@@ -33,7 +33,7 @@ const SubQuestionList = ({
             <li key={question.category} className="flex flex-col gap-3">
               <label className="font-bold text-[16px]">{question.title}</label>
               <input
-                type="text"
+                type="number"
                 value={postData[question.category]}
                 onChange={(e) => setPostData(question.category, e.target.value)}
                 placeholder={question.placeholder}
