@@ -63,7 +63,7 @@ flowchart LR
 
 <table>
   <tr>
-    <td align="center" width="25%"><img src="static/animals/orca.png" width="120" alt="범고래"><br><b>위풍당당 범고래</b><br><sub>건강과 성장에 투자하는 주도형</sub></td>
+    <td align="center" width="25%"><img src="https://github.com/lun-lun-neko/ydplabmodel/blob/main/static/animals/orca.png" width="120" alt="범고래"><br><b>위풍당당 범고래</b><br><sub>건강과 성장에 투자하는 주도형</sub></td>
     <td align="center" width="25%"><img src="static/animals/greyheron.png" width="120" alt="왜가리"><br><b>고요한 탐험가 왜가리</b><br><sub>자연과 편안한 교류를 즐기는 유형</sub></td>
     <td align="center" width="25%"><img src="static/animals/manatee.png" width="120" alt="매너티"><br><b>여유만만 매너티</b><br><sub>휴식과 자기돌봄을 사랑하는 유형</sub></td>
     <td align="center" width="25%"><img src="static/animals/albatross.png" width="120" alt="알바트로스"><br><b>끈기의 비상가 알바트로스</b><br><sub>짧은 시간에도 밀도 있게 움직이는 활동형</sub></td>
