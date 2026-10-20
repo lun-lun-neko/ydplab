@@ -200,7 +200,7 @@ Pipeline([
 
 Notion에 흩어져 있던 설계, 군집분석, API, 배포 기록을 통합한 상세 문서는 아래에서 확인할 수 있습니다.
 
-- [YDP.Lab Project 종합 문서](./YDP_Lab_Project_Summary.md)
+- [YDP.Lab Project 종합 문서](https://github.com/lun-lun-neko/ydplabmodel/blob/main/YDP_Lab_Project_Summary.md)
 
 ---
 
