@@ -1,13 +1,15 @@
 import { useNavigate, useParams } from "react-router";
 import Container from "../../components/Container";
 import { usePostDataStore } from "../../store/usePostDataStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../../components/Modal";
-import { initKakao, shareByKakaoTalk } from "../../kakao";
+import { loadKakaoSdk, shareByKakaoTalk } from "../../kakao";
 import { useResultQuery } from "../../hooks/useResultQuery";
 import NotFoundPage from "../NotFoundPage";
 import AnimalImage from "../../components/AnimalImage";
 import { pageTitle } from "../../constants/SITE";
+import { whenIdle } from "../../utils/whenIdle";
+import { RESULT_IMAGE_SIZES } from "../../constants/IMAGE";
 
 const ResultPage = () => {
   const { animalId } = useParams();
@@ -27,10 +29,15 @@ const ResultPage = () => {
     setIsOpenModal(true);
   };
 
-  const handleClickShare = () => {
+  useEffect(() => {
+    whenIdle()
+      .then(loadKakaoSdk)
+      .catch(() => {});
+  }, []);
+
+  const handleClickShare = async () => {
     try {
-      initKakao();
-      shareByKakaoTalk({
+      await shareByKakaoTalk({
         name: result.animalName,
         animalType: result.animalType,
         description: result.description,
@@ -89,7 +96,7 @@ const ResultPage = () => {
         <AnimalImage
           animalId={animalId}
           fallbackSrc={result.animalImageUrl}
-          sizes="(min-width: 800px) 688px, 85vw"
+          sizes={RESULT_IMAGE_SIZES}
           className="w-full h-auto"
           alt={`${result.animal} 캐릭터 이미지`}
           priority
