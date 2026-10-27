@@ -5,9 +5,10 @@ import mockData from "../../mock.json";
 import QuestionList from "../../components/QuestionList";
 import SubQuestionList from "../../components/SubQuestionList";
 import { usePostDataStore } from "../../store/usePostDataStore";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { usePostQuestionsQuery } from "../../hooks/usePostQuestionsQuery";
 import NotFoundPage from "../NotFoundPage";
+import AnalyzingOverlay from "../../components/AnalyzingOverlay";
 
 const QuestionPage = () => {
   const { postData } = usePostDataStore();
@@ -17,7 +18,11 @@ const QuestionPage = () => {
   const { questions } = mockData;
   const total = questions.length;
   const currentQuestion = /^\d+$/.test(id) ? questions[id - 1] : undefined;
-  const { mutate: postQuestions } = usePostQuestionsQuery();
+  const {
+    mutate: postQuestions,
+    isPending: isSubmitting,
+    isError: isSubmitError,
+  } = usePostQuestionsQuery();
 
   const handleNextPage = () => {
     const nextId = Number(id) + 1;
@@ -29,8 +34,16 @@ const QuestionPage = () => {
     navigate(`/questions/${prevId}`);
   };
 
+  // 더블클릭은 리렌더 전에 두 번 호출되므로 isPending만으로는 막을 수 없다
+  const submitLockRef = useRef(false);
   const handleSubmit = () => {
-    postQuestions(postData);
+    if (submitLockRef.current) return;
+    submitLockRef.current = true;
+    postQuestions(postData, {
+      onSettled: () => {
+        submitLockRef.current = false;
+      },
+    });
   };
 
   useEffect(() => {
@@ -48,6 +61,7 @@ const QuestionPage = () => {
 
   return (
     <Container className="flex flex-col ">
+      <AnalyzingOverlay isOpen={isSubmitting} />
       <ResponsePercent currentQuestionIndex={id} total={total} />
 
       {currentQuestion.subQuestions ? (
@@ -62,6 +76,8 @@ const QuestionPage = () => {
           handleNextPage={handleNextPage}
           handlePrevPage={handlePrevPage}
           handleSubmit={handleSubmit}
+          isSubmitting={isSubmitting}
+          isSubmitError={isSubmitError}
           currentId={id}
         />
       )}

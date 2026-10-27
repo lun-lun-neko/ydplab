@@ -9,6 +9,8 @@ const QuestionList = ({
   handlePrevPage,
   currentId,
   handleSubmit,
+  isSubmitting,
+  isSubmitError,
 }) => {
   const { postData, setPostData } = usePostDataStore();
   const { questions } = currentQuestion;
@@ -62,6 +64,11 @@ const QuestionList = ({
           ))}
         </ul>
       </div>
+      {isSubmitError && (
+        <p role="alert" className="mt-4 text-red-500 text-sm">
+          결과를 불러오지 못했어요. 잠시 후 다시 제출해주세요.
+        </p>
+      )}
       <div className="flex justify-between mt-auto pt-4">
         <button
           onClick={handlePrevPage}
@@ -73,10 +80,11 @@ const QuestionList = ({
         {currentId == 10 ? (
           <button
             onClick={handleSubmit}
-            disabled={isDisabledSubmitBtn()}
+            disabled={isDisabledSubmitBtn() || isSubmitting}
+            aria-busy={isSubmitting}
             className="px-4 py-2 cursor-pointer border border-gray-200 disabled:bg-gray-200"
           >
-            제출
+            {isSubmitting ? "분석 중…" : "제출"}
           </button>
         ) : (
           <button
