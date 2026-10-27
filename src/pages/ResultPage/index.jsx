@@ -10,6 +10,7 @@ import AnimalImage from "../../components/AnimalImage";
 import { pageTitle } from "../../constants/SITE";
 import { whenIdle } from "../../utils/whenIdle";
 import { RESULT_IMAGE_SIZES } from "../../constants/IMAGE";
+import { withTopic } from "../../utils/josa";
 
 const ResultPage = () => {
   const { animalId } = useParams();
@@ -18,6 +19,7 @@ const ResultPage = () => {
   const navigate = useNavigate();
   const [modalContent, setModalContent] = useState("");
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [shareError, setShareError] = useState(null);
 
   const handleReset = () => {
     resetPostData();
@@ -36,6 +38,7 @@ const ResultPage = () => {
   }, []);
 
   const handleClickShare = async () => {
+    setShareError(null);
     try {
       await shareByKakaoTalk({
         name: result.animalName,
@@ -44,11 +47,10 @@ const ResultPage = () => {
         imageURL: result.animalImageUrl,
         animalId,
       });
-    } catch (error) {
-      console.log(error.message);
+    } catch {
+      setShareError("카카오톡 공유를 열지 못했어요. 잠시 후 다시 시도해주세요.");
     }
   };
-  console.log(result);
 
   if (isPending) {
     return (
@@ -109,16 +111,16 @@ const ResultPage = () => {
         onClick={() => onClickDetail(result.animalDescription)}
         className="w-full bg-yellow-200 p-2 border-1 cursor-pointer font-bold rounded-md"
       >
-        {result.animal}는 어떤 동물일까요 ?
+        {withTopic(result.animal)} 어떤 동물일까요?
       </button>
       <button
-        onClick={() => onClickDetail(result.typeDescriptoon)}
+        onClick={() => onClickDetail(result.typeDescription)}
         className="w-full bg-yellow-200 p-2 border-1 cursor-pointer font-bold rounded-md"
       >
         나는 어떤 유형일까요?
       </button>
       <h3 className="font-bold">{"< 분석 리포트 >"}</h3>
-      {result.analSummary.map((summary) => (
+      {result.analysisSummary.map((summary) => (
         <button
           key={summary.subtitle}
           onClick={() => onClickDetail(summary)}
@@ -152,6 +154,11 @@ const ResultPage = () => {
           공유하기
         </button>
       </div>
+      {shareError && (
+        <p role="alert" className="text-red-500 text-sm">
+          {shareError}
+        </p>
+      )}
     </Container>
   );
 };
