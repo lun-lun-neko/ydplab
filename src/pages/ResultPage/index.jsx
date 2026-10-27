@@ -67,17 +67,17 @@ const ResultPage = () => {
           !Array.isArray(modalContent) &&
           modalContent !== null && (
             <div>
-              <h3>{modalContent.subTitle}</h3>
+              <h2 className="font-bold">{modalContent.subtitle}</h2>
               <p>{modalContent.content}</p>
-              <h2 className="text-center text-[24px] p-4 font-bold">
+              <h3 className="text-center text-[24px] p-4 font-bold">
                 {"< 주요 지표 >"}
-              </h2>
+              </h3>
               {modalContent.metrics?.map((obj) => (
-                <div className="">
-                  <h3 className="font-bold py-2 text-[20px] text-blue-400">
+                <div key={obj.subtitle}>
+                  <h4 className="font-bold py-2 text-[20px] text-blue-600">
                     {obj.subtitle}
-                  </h3>
-                  <p className="">{obj.content}</p>
+                  </h4>
+                  <p>{obj.content}</p>
                 </div>
               ))}
             </div>
@@ -89,12 +89,12 @@ const ResultPage = () => {
           fallbackSrc={result.animalImageUrl}
           sizes="(min-width: 800px) 688px, 85vw"
           className="w-full h-auto"
-          alt="결과이미지"
+          alt={`${result.animal} 캐릭터 이미지`}
           priority
         />
       </div>
-      <h1 className="font-bold text-blue-400">{result.animalName}</h1>
-      <h2 className="text-gray-400">{result.animalType}</h2>
+      <h1 className="font-bold text-blue-600">{result.animalName}</h1>
+      <h2 className="text-gray-500">{result.animalType}</h2>
       <p>{result.description}</p>
       <button
         onClick={() => onClickDetail(result.animalDescription)}
@@ -111,6 +111,7 @@ const ResultPage = () => {
       <h3 className="font-bold">{"< 분석 리포트 >"}</h3>
       {result.analSummary.map((summary) => (
         <button
+          key={summary.subtitle}
           onClick={() => onClickDetail(summary)}
           className="w-full bg-yellow-200 p-2 border-1 cursor-pointer font-bold rounded-md"
         >
@@ -120,7 +121,9 @@ const ResultPage = () => {
       <h3 className="font-bold">나만의 특성</h3>
       <div className="flex gap-4 flex-wrap">
         {result.interesting.map((tag) => (
-          <span className="font-bold bg-green-200 px-2 py-1 rounded-md border-1">
+          <span
+            key={tag}
+            className="font-bold bg-green-200 px-2 py-1 rounded-md border-1">
             {tag}
           </span>
         ))}
