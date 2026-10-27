@@ -6,6 +6,7 @@ import Modal from "../../components/Modal";
 import { initKakao, shareByKakaoTalk } from "../../kakao";
 import { useResultQuery } from "../../hooks/useResultQuery";
 import NotFoundPage from "../NotFoundPage";
+import AnimalImage from "../../components/AnimalImage";
 
 const ResultPage = () => {
   const { animalId } = useParams();
@@ -82,8 +83,15 @@ const ResultPage = () => {
             </div>
           )}
       </Modal>
-      <div>
-        <img src={result.animalImageUrl} alt="결과이미지" className="w-full" />
+      <div className="w-full">
+        <AnimalImage
+          animalId={animalId}
+          fallbackSrc={result.animalImageUrl}
+          sizes="(min-width: 800px) 688px, 85vw"
+          className="w-full h-auto"
+          alt="결과이미지"
+          priority
+        />
       </div>
       <h1 className="font-bold text-blue-400">{result.animalName}</h1>
       <h2 className="text-gray-400">{result.animalType}</h2>
