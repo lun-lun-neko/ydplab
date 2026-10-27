@@ -10,6 +10,7 @@ import { usePostQuestionsQuery } from "../../hooks/usePostQuestionsQuery";
 import NotFoundPage from "../NotFoundPage";
 import AnalyzingOverlay from "../../components/AnalyzingOverlay";
 import { findFirstIncompleteIndex } from "../../utils/validation";
+import { pageTitle } from "../../constants/SITE";
 
 const QuestionPage = () => {
   const { postData } = usePostDataStore();
@@ -68,6 +69,7 @@ const QuestionPage = () => {
 
   return (
     <Container className="flex flex-col ">
+      <title>{pageTitle(`질문 ${id} / ${total}`)}</title>
       <AnalyzingOverlay isOpen={isSubmitting} />
       <ResponsePercent currentQuestionIndex={id} total={total} />
 
