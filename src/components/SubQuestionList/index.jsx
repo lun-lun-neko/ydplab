@@ -1,5 +1,6 @@
 import { usePostDataStore } from "../../store/usePostDataStore";
 import Total from "../Total";
+import { validateQuestion } from "../../utils/validation";
 
 const SubQuestionList = ({
   currentQuestion,
@@ -13,21 +14,11 @@ const SubQuestionList = ({
     return currentQuestion.category === "leisureRate" ? true : false;
   };
 
-  const isDisabledNextBtn = () => {
-    if (currentQuestion.category === "avgLeisureTime") {
-      return subQuestions.every((q) => {
-        const value = postData[q.category];
-        return value !== "" && value !== null && value >= 0 && value <= 24;
-      });
-    } else {
-      const sum = subQuestions.reduce((acc, q) => {
-        const value = Number(postData[q.category]) || 0;
-        return acc + value;
-      }, 0);
-
-      return sum === 100;
-    }
-  };
+  const { canProceed, error } = validateQuestion(currentQuestion, postData);
+  const { min, max } =
+    currentQuestion.category === "avgLeisureTime"
+      ? { min: 0, max: 24 }
+      : { min: 0, max: 100 };
 
   return (
     <>
@@ -42,7 +33,12 @@ const SubQuestionList = ({
               <label className="font-bold text-[16px]">{question.title}</label>
               <input
                 type="number"
-                value={postData[question.category]}
+                inputMode="numeric"
+                min={min}
+                max={max}
+                step={1}
+                aria-invalid={Boolean(error)}
+                value={postData[question.category] ?? ""}
                 onChange={(e) => setPostData(question.category, e.target.value)}
                 placeholder={question.placeholder}
                 className="focus:outline-blue-400 bg-gray-200 w-full py-2 px-4"
@@ -50,6 +46,9 @@ const SubQuestionList = ({
             </li>
           ))}
         </ul>
+        <p aria-live="polite" className="min-h-5 mt-3 text-red-500 text-sm">
+          {error}
+        </p>
       </div>
       <div className="flex justify-between mt-auto pt-4">
         <button
@@ -60,7 +59,7 @@ const SubQuestionList = ({
         </button>
         <button
           onClick={handleNextPage}
-          disabled={!isDisabledNextBtn()}
+          disabled={!canProceed}
           className="px-4 py-2 cursor-pointer border border-gray-200 disabled:bg-gray-200"
         >
           다음

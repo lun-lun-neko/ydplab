@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "react-router";
 import Container from "../../components/Container";
 import ResponsePercent from "../../components/ResponsePercent";
 import mockData from "../../mock.json";
@@ -9,6 +9,7 @@ import { useEffect, useRef } from "react";
 import { usePostQuestionsQuery } from "../../hooks/usePostQuestionsQuery";
 import NotFoundPage from "../NotFoundPage";
 import AnalyzingOverlay from "../../components/AnalyzingOverlay";
+import { findFirstIncompleteIndex } from "../../utils/validation";
 
 const QuestionPage = () => {
   const { postData } = usePostDataStore();
@@ -57,6 +58,12 @@ const QuestionPage = () => {
         description={`질문은 1번부터 ${total}번까지 있어요.`}
       />
     );
+  }
+
+  // 앞 문항을 건너뛰고 들어오면 아직 답하지 않은 첫 문항으로 보낸다
+  const firstIncompleteIndex = findFirstIncompleteIndex(postData, id - 1);
+  if (firstIncompleteIndex !== -1) {
+    return <Navigate to={`/questions/${firstIncompleteIndex + 1}`} replace />;
   }
 
   return (
