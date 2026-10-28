@@ -7,6 +7,7 @@ import SubQuestionList from "../../components/SubQuestionList";
 import { usePostDataStore } from "../../store/usePostDataStore";
 import { useEffect } from "react";
 import { usePostQuestionsQuery } from "../../hooks/usePostQuestionsQuery";
+import NotFoundPage from "../NotFoundPage";
 
 const QuestionPage = () => {
   const { postData } = usePostDataStore();
@@ -15,7 +16,7 @@ const QuestionPage = () => {
   const { id } = params;
   const { questions } = mockData;
   const total = questions.length;
-  const currentQuestion = questions[id - 1];
+  const currentQuestion = /^\d+$/.test(id) ? questions[id - 1] : undefined;
   const { mutate: postQuestions } = usePostQuestionsQuery();
 
   const handleNextPage = () => {
@@ -35,6 +36,16 @@ const QuestionPage = () => {
   useEffect(() => {
     console.log(postData);
   }, [postData]);
+
+  if (!currentQuestion) {
+    return (
+      <NotFoundPage
+        title="없는 질문이에요"
+        description={`질문은 1번부터 ${total}번까지 있어요.`}
+      />
+    );
+  }
+
   return (
     <Container className="flex flex-col ">
       <ResponsePercent currentQuestionIndex={id} total={total} />

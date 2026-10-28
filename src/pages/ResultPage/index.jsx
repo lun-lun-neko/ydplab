@@ -1,13 +1,15 @@
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Container from "../../components/Container";
 import { usePostDataStore } from "../../store/usePostDataStore";
 import { useState } from "react";
 import Modal from "../../components/Modal";
 import { initKakao, shareByKakaoTalk } from "../../kakao";
+import { useResultQuery } from "../../hooks/useResultQuery";
+import NotFoundPage from "../NotFoundPage";
 
 const ResultPage = () => {
-  const location = useLocation();
-  const result = location.state;
+  const { animalId } = useParams();
+  const { data: result, isPending, isError } = useResultQuery(animalId);
   const { resetPostData } = usePostDataStore();
   const navigate = useNavigate();
   const [modalContent, setModalContent] = useState("");
@@ -31,12 +33,31 @@ const ResultPage = () => {
         animalType: result.animalType,
         description: result.description,
         imageURL: result.animalImageUrl,
+        animalId,
       });
     } catch (error) {
       console.log(error.message);
     }
   };
   console.log(result);
+
+  if (isPending) {
+    return (
+      <Container className="flex flex-col items-center gap-4 p-4">
+        <p className="text-gray-500">결과를 불러오는 중이에요…</p>
+      </Container>
+    );
+  }
+
+  if (isError) {
+    return (
+      <NotFoundPage
+        title="결과를 찾을 수 없어요"
+        description="링크가 잘못되었을 수 있어요. 테스트를 다시 해볼까요?"
+      />
+    );
+  }
+
   return (
     <Container className="flex flex-col items-center gap-4">
       <Modal onClose={() => setIsOpenModal(false)} isOpen={isOpenModal}>
