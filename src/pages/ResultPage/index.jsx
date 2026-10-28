@@ -7,6 +7,7 @@ import { initKakao, shareByKakaoTalk } from "../../kakao";
 import { useResultQuery } from "../../hooks/useResultQuery";
 import NotFoundPage from "../NotFoundPage";
 import AnimalImage from "../../components/AnimalImage";
+import { pageTitle } from "../../constants/SITE";
 
 const ResultPage = () => {
   const { animalId } = useParams();
@@ -61,6 +62,7 @@ const ResultPage = () => {
 
   return (
     <Container className="flex flex-col items-center gap-4">
+      <title>{pageTitle(`${result.animalType} 결과`)}</title>
       <Modal onClose={() => setIsOpenModal(false)} isOpen={isOpenModal}>
         {typeof modalContent === "string" && <p>{modalContent}</p>}
         {typeof modalContent === "object" &&

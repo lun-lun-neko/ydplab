@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import Container from "../../components/Container";
 import mockData from "../../mock.json";
 import AnimalImage from "../../components/AnimalImage";
+import { pageTitle } from "../../constants/SITE";
 
 const HomePage = () => {
   const { questions } = mockData;
@@ -9,6 +10,7 @@ const HomePage = () => {
 
   return (
     <Container className="flex flex-col items-center gap-4 p-4">
+      <title>{pageTitle()}</title>
       <AnimalImage
         animalId="greyheron"
         sizes="160px"
