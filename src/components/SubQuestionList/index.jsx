@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { usePostDataStore } from "../../store/usePostDataStore";
 import Total from "../Total";
 import { validateQuestion } from "../../utils/validation";
@@ -9,6 +10,8 @@ const SubQuestionList = ({
 }) => {
   const { postData, setPostData } = usePostDataStore();
   const { subQuestions } = currentQuestion;
+  const idPrefix = useId();
+  const errorId = `${idPrefix}-error`;
 
   const isRequireTotal = () => {
     return currentQuestion.category === "leisureRate" ? true : false;
@@ -23,15 +26,20 @@ const SubQuestionList = ({
   return (
     <>
       <div>
-        <h2 className="text-[18px] py-3 font-bold">
-          <p>{currentQuestion.title}</p>
-          {isRequireTotal() && <Total />}
-        </h2>
-        <ul className="flex flex-col gap-3">
+        <h2 className="text-[18px] pt-3 font-bold">{currentQuestion.title}</h2>
+        {isRequireTotal() && <Total />}
+        <ul className="flex flex-col gap-3 pt-3">
           {subQuestions.map((question) => (
             <li key={question.category} className="flex flex-col gap-3">
-              <label className="font-bold text-[16px]">{question.title}</label>
+              <label
+                htmlFor={`${idPrefix}-${question.category}`}
+                className="font-bold text-[16px]"
+              >
+                {question.title}
+              </label>
               <input
+                id={`${idPrefix}-${question.category}`}
+                aria-describedby={errorId}
                 type="number"
                 inputMode="numeric"
                 min={min}
@@ -41,12 +49,16 @@ const SubQuestionList = ({
                 value={postData[question.category] ?? ""}
                 onChange={(e) => setPostData(question.category, e.target.value)}
                 placeholder={question.placeholder}
-                className="focus:outline-blue-400 bg-gray-200 w-full py-2 px-4"
+                className="focus:outline-blue-600 bg-gray-200 w-full py-2 px-4"
               />
             </li>
           ))}
         </ul>
-        <p aria-live="polite" className="min-h-5 mt-3 text-red-500 text-sm">
+        <p
+          id={errorId}
+          aria-live="polite"
+          className="min-h-5 mt-3 text-red-500 text-sm"
+        >
           {error}
         </p>
       </div>

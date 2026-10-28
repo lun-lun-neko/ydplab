@@ -10,9 +10,9 @@ const Total = () => {
     Number(postData.socialRelationshipRate ?? 0);
 
   return (
-    <div className="text-gray-400">
-      <p>{total} / 100</p>
-    </div>
+    <p className="text-gray-500 font-bold" aria-live="polite">
+      합계 {total} / 100
+    </p>
   );
 };
 
