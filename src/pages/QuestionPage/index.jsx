@@ -5,7 +5,7 @@ import mockData from "../../mock.json";
 import QuestionList from "../../components/QuestionList";
 import SubQuestionList from "../../components/SubQuestionList";
 import { usePostDataStore } from "../../store/usePostDataStore";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { usePostQuestionsQuery } from "../../hooks/usePostQuestionsQuery";
 import NotFoundPage from "../NotFoundPage";
 import AnalyzingOverlay from "../../components/AnalyzingOverlay";
@@ -47,10 +47,6 @@ const QuestionPage = () => {
       },
     });
   };
-
-  useEffect(() => {
-    console.log(postData);
-  }, [postData]);
 
   if (!currentQuestion) {
     return (

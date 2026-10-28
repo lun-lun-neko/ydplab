@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getClient } from "../api/client";
 import { useNavigate } from "react-router";
 import { saveResult } from "../utils/resultStorage";
+import { normalizeResult } from "../utils/normalizeResult";
 
 const postQuestions = async (data) => {
   const client = await getClient();
@@ -9,8 +10,7 @@ const postQuestions = async (data) => {
 };
 
 // 응답이 없거나(타임아웃·네트워크) 5xx일 때만 재시도한다. 4xx는 입력 문제라 재시도하지 않는다
-const isRetryable = (error) =>
-  !error.response || error.response.status >= 500;
+const isRetryable = (error) => !error.response || error.response.status >= 500;
 
 export const usePostQuestionsQuery = () => {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ export const usePostQuestionsQuery = () => {
     retryDelay: 2000,
     onSuccess: (res) => {
       const animalId = saveResult(res.data);
-      queryClient.setQueryData(["result", animalId], res.data);
+      queryClient.setQueryData(["result", animalId], normalizeResult(res.data));
       navigate(`/result/${animalId}`);
     },
   });
