@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import Container from "../../components/Container";
 import mockData from "../../mock.json";
+import AnimalImage from "../../components/AnimalImage";
 
 const HomePage = () => {
   const { questions } = mockData;
@@ -8,10 +9,12 @@ const HomePage = () => {
 
   return (
     <Container className="flex flex-col items-center gap-4 p-4">
-      <img
-        className="rounded-full w-40"
-        src="https://lunlunneko-ydplab.hf.space/static/animals/greyheron.png"
+      <AnimalImage
+        animalId="greyheron"
+        sizes="160px"
+        className="rounded-full w-40 h-40"
         alt="꽹가리"
+        priority
       />
       <h2 className="text-blue-400 font-bold text-[22px]">
         나의 동물 성격 찾기
