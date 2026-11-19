@@ -1,7 +1,15 @@
 @import "tailwindcss";
 
-@layer utilities {
-  .font-roboto {
-    font-family: "Roboto", sans-serif;
+@theme {
+  --font-sans:
+    "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui,
+    sans-serif;
+}
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-blue-600);
+    outline-offset: 2px;
   }
 }

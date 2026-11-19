@@ -1,11 +1,16 @@
 import { useNavigate, useParams } from "react-router";
 import Container from "../../components/Container";
 import { usePostDataStore } from "../../store/usePostDataStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../../components/Modal";
-import { initKakao, shareByKakaoTalk } from "../../kakao";
+import { loadKakaoSdk, shareByKakaoTalk } from "../../kakao";
 import { useResultQuery } from "../../hooks/useResultQuery";
 import NotFoundPage from "../NotFoundPage";
+import AnimalImage from "../../components/AnimalImage";
+import { pageTitle } from "../../constants/SITE";
+import { whenIdle } from "../../utils/whenIdle";
+import { RESULT_IMAGE_SIZES } from "../../constants/IMAGE";
+import { withTopic } from "../../utils/josa";
 
 const ResultPage = () => {
   const { animalId } = useParams();
@@ -14,6 +19,7 @@ const ResultPage = () => {
   const navigate = useNavigate();
   const [modalContent, setModalContent] = useState("");
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [shareError, setShareError] = useState(null);
 
   const handleReset = () => {
     resetPostData();
@@ -25,21 +31,26 @@ const ResultPage = () => {
     setIsOpenModal(true);
   };
 
-  const handleClickShare = () => {
+  useEffect(() => {
+    whenIdle()
+      .then(loadKakaoSdk)
+      .catch(() => {});
+  }, []);
+
+  const handleClickShare = async () => {
+    setShareError(null);
     try {
-      initKakao();
-      shareByKakaoTalk({
+      await shareByKakaoTalk({
         name: result.animalName,
         animalType: result.animalType,
         description: result.description,
         imageURL: result.animalImageUrl,
         animalId,
       });
-    } catch (error) {
-      console.log(error.message);
+    } catch {
+      setShareError("카카오톡 공유를 열지 못했어요. 잠시 후 다시 시도해주세요.");
     }
   };
-  console.log(result);
 
   if (isPending) {
     return (
@@ -60,49 +71,58 @@ const ResultPage = () => {
 
   return (
     <Container className="flex flex-col items-center gap-4">
+      <title>{pageTitle(`${result.animalType} 결과`)}</title>
       <Modal onClose={() => setIsOpenModal(false)} isOpen={isOpenModal}>
         {typeof modalContent === "string" && <p>{modalContent}</p>}
         {typeof modalContent === "object" &&
           !Array.isArray(modalContent) &&
           modalContent !== null && (
             <div>
-              <h3>{modalContent.subTitle}</h3>
+              <h2 className="font-bold">{modalContent.subtitle}</h2>
               <p>{modalContent.content}</p>
-              <h2 className="text-center text-[24px] p-4 font-bold">
+              <h3 className="text-center text-[24px] p-4 font-bold">
                 {"< 주요 지표 >"}
-              </h2>
+              </h3>
               {modalContent.metrics?.map((obj) => (
-                <div className="">
-                  <h3 className="font-bold py-2 text-[20px] text-blue-400">
+                <div key={obj.subtitle}>
+                  <h4 className="font-bold py-2 text-[20px] text-blue-600">
                     {obj.subtitle}
-                  </h3>
-                  <p className="">{obj.content}</p>
+                  </h4>
+                  <p>{obj.content}</p>
                 </div>
               ))}
             </div>
           )}
       </Modal>
-      <div>
-        <img src={result.animalImageUrl} alt="결과이미지" className="w-full" />
+      <div className="w-full">
+        <AnimalImage
+          animalId={animalId}
+          fallbackSrc={result.animalImageUrl}
+          sizes={RESULT_IMAGE_SIZES}
+          className="w-full h-auto"
+          alt={`${result.animal} 캐릭터 이미지`}
+          priority
+        />
       </div>
-      <h1 className="font-bold text-blue-400">{result.animalName}</h1>
-      <h2 className="text-gray-400">{result.animalType}</h2>
+      <h1 className="font-bold text-blue-600">{result.animalName}</h1>
+      <h2 className="text-gray-500">{result.animalType}</h2>
       <p>{result.description}</p>
       <button
         onClick={() => onClickDetail(result.animalDescription)}
         className="w-full bg-yellow-200 p-2 border-1 cursor-pointer font-bold rounded-md"
       >
-        {result.animal}는 어떤 동물일까요 ?
+        {withTopic(result.animal)} 어떤 동물일까요?
       </button>
       <button
-        onClick={() => onClickDetail(result.typeDescriptoon)}
+        onClick={() => onClickDetail(result.typeDescription)}
         className="w-full bg-yellow-200 p-2 border-1 cursor-pointer font-bold rounded-md"
       >
         나는 어떤 유형일까요?
       </button>
       <h3 className="font-bold">{"< 분석 리포트 >"}</h3>
-      {result.analSummary.map((summary) => (
+      {result.analysisSummary.map((summary) => (
         <button
+          key={summary.subtitle}
           onClick={() => onClickDetail(summary)}
           className="w-full bg-yellow-200 p-2 border-1 cursor-pointer font-bold rounded-md"
         >
@@ -112,7 +132,9 @@ const ResultPage = () => {
       <h3 className="font-bold">나만의 특성</h3>
       <div className="flex gap-4 flex-wrap">
         {result.interesting.map((tag) => (
-          <span className="font-bold bg-green-200 px-2 py-1 rounded-md border-1">
+          <span
+            key={tag}
+            className="font-bold bg-green-200 px-2 py-1 rounded-md border-1">
             {tag}
           </span>
         ))}
@@ -132,6 +154,11 @@ const ResultPage = () => {
           공유하기
         </button>
       </div>
+      {shareError && (
+        <p role="alert" className="text-red-500 text-sm">
+          {shareError}
+        </p>
+      )}
     </Container>
   );
 };

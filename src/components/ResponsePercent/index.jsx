@@ -27,15 +27,22 @@ const ResponsePercent = ({ total, currentQuestionIndex }) => {
   return (
     <header>
       <div className="flex justify-between">
-        <h1 className="font-bold text-blue-400">나와 닮은 동물은?</h1>
-        <p className="text-gray-400">
+        <h1 className="font-bold text-blue-600">나와 닮은 동물은?</h1>
+        <p className="text-gray-500">
           질문 {currentQuestionIndex} / {total}
         </p>
       </div>
 
-      <div className="w-full bg-gray-200 rounded-full h-6 overflow-hidden my-4">
+      <div
+        role="progressbar"
+        aria-label="응답 진행률"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={percentNumber}
+        className="w-full bg-gray-200 rounded-full h-6 overflow-hidden my-4"
+      >
         <div
-          className="bg-blue-500 h-full text-white text-sm flex items-center justify-center transition-all duration-500 ease-in-out"
+          className="bg-blue-600 h-full text-white text-sm flex items-center justify-center transition-all duration-500 ease-in-out"
           style={{ width: `${percentNumber}%` }}
         >
           {percentNumber === 0 ? "" : `${percentNumber}%`}

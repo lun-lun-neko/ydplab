@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import Container from "../../components/Container";
+import { pageTitle } from "../../constants/SITE";
 
 const NotFoundPage = ({
   title = "페이지를 찾을 수 없어요",
@@ -9,11 +10,12 @@ const NotFoundPage = ({
 
   return (
     <Container className="flex flex-col items-center gap-4 p-4">
-      <h1 className="text-blue-400 font-bold text-[22px]">{title}</h1>
+      <title>{pageTitle(title)}</title>
+      <h1 className="text-blue-600 font-bold text-[22px]">{title}</h1>
       <p className="text-gray-500 text-center">{description}</p>
       <button
         onClick={() => navigate("/")}
-        className="bg-blue-400 py-2 px-4 w-full text-white cursor-pointer rounded-md"
+        className="bg-blue-600 py-2 px-4 w-full text-white cursor-pointer rounded-md"
       >
         테스트 하러 가기
       </button>
