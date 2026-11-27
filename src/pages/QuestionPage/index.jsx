@@ -1,13 +1,16 @@
-import { useNavigate, useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "react-router";
 import Container from "../../components/Container";
 import ResponsePercent from "../../components/ResponsePercent";
 import mockData from "../../mock.json";
 import QuestionList from "../../components/QuestionList";
 import SubQuestionList from "../../components/SubQuestionList";
 import { usePostDataStore } from "../../store/usePostDataStore";
-import { useEffect } from "react";
+import { useRef } from "react";
 import { usePostQuestionsQuery } from "../../hooks/usePostQuestionsQuery";
 import NotFoundPage from "../NotFoundPage";
+import AnalyzingOverlay from "../../components/AnalyzingOverlay";
+import { findFirstIncompleteIndex } from "../../utils/validation";
+import { pageTitle } from "../../constants/SITE";
 
 const QuestionPage = () => {
   const { postData } = usePostDataStore();
@@ -17,7 +20,11 @@ const QuestionPage = () => {
   const { questions } = mockData;
   const total = questions.length;
   const currentQuestion = /^\d+$/.test(id) ? questions[id - 1] : undefined;
-  const { mutate: postQuestions } = usePostQuestionsQuery();
+  const {
+    mutate: postQuestions,
+    isPending: isSubmitting,
+    isError: isSubmitError,
+  } = usePostQuestionsQuery();
 
   const handleNextPage = () => {
     const nextId = Number(id) + 1;
@@ -29,13 +36,17 @@ const QuestionPage = () => {
     navigate(`/questions/${prevId}`);
   };
 
+  // 더블클릭은 리렌더 전에 두 번 호출되므로 isPending만으로는 막을 수 없다
+  const submitLockRef = useRef(false);
   const handleSubmit = () => {
-    postQuestions(postData);
+    if (submitLockRef.current) return;
+    submitLockRef.current = true;
+    postQuestions(postData, {
+      onSettled: () => {
+        submitLockRef.current = false;
+      },
+    });
   };
-
-  useEffect(() => {
-    console.log(postData);
-  }, [postData]);
 
   if (!currentQuestion) {
     return (
@@ -46,8 +57,16 @@ const QuestionPage = () => {
     );
   }
 
+  // 앞 문항을 건너뛰고 들어오면 아직 답하지 않은 첫 문항으로 보낸다
+  const firstIncompleteIndex = findFirstIncompleteIndex(postData, id - 1);
+  if (firstIncompleteIndex !== -1) {
+    return <Navigate to={`/questions/${firstIncompleteIndex + 1}`} replace />;
+  }
+
   return (
     <Container className="flex flex-col ">
+      <title>{pageTitle(`질문 ${id} / ${total}`)}</title>
+      <AnalyzingOverlay isOpen={isSubmitting} />
       <ResponsePercent currentQuestionIndex={id} total={total} />
 
       {currentQuestion.subQuestions ? (
@@ -62,6 +81,8 @@ const QuestionPage = () => {
           handleNextPage={handleNextPage}
           handlePrevPage={handlePrevPage}
           handleSubmit={handleSubmit}
+          isSubmitting={isSubmitting}
+          isSubmitError={isSubmitError}
           currentId={id}
         />
       )}

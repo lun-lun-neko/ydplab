@@ -15,7 +15,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # 배포 전에 린트·빌드·E2E를 통과해야 한다
+  test:
+    uses: ./.github/workflows/ci.yml
+
   build:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
